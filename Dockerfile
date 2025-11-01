@@ -7,14 +7,25 @@ ARG LAB_USER
 
 USER root
 
+COPY docker.list /etc/apt/sources.list.d/docker.list
+
 RUN <<EOF
 set -eu
 
+# Create keyrings directory and add Docker's GPG key
+install -m 0755 -d /etc/apt/keyrings && \
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+chmod a+r /etc/apt/keyrings/docker.gpg
+
 apt-get update
-apt-get install -y \
+apt-get install --assume-yes \
   build-essential \
   openjdk-21-jre \
-  unzip
+  unzip \
+  docker-ce
+
+systemctl start docker && chmod 777 /var/run/sock.docker
 
 curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | tee /usr/share/keyrings/jenkins-keyring.asc
 echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | tee /etc/apt/sources.list.d/jenkins.list
@@ -27,8 +38,10 @@ RUN <<EOF
 set -eu
 
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+
 chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list
+
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list
 
 apt-get update
 apt-get install -y \
