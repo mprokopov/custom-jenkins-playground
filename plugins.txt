@@ -1,0 +1,15 @@
+configuration-as-code
+commons-text-api
+snakeyaml-api
+json-api
+prism-api
+caffeine-api
+workflow-aggregator
+pipeline-stage-view
+golang
+git
+github
+job-dsl
+permissive-script-security
+eddsa-api
+rebuild

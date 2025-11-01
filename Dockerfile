@@ -36,7 +36,16 @@ apt-get install -y \
   gh
 EOF
 
+COPY override.conf /etc/systemd/system/jenkins.service.d/override.conf
+
 USER $LAB_USER
 ENV HOME=/home/$LAB_USER
+
+COPY plugins.txt $HOME/plugins.txt
+
+RUN curl -LO https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.13.2/jenkins-plugin-manager-2.13.2.jar
+RUN java -jar jenkins-plugin-manager-*.jar --war /usr/share/java/jenkins.war --plugin-download-directory /var/lib/jenkins/plugins/ --plugin-file $HOME/$LAB_USER/plugins.txt && chown -R jenkins:jenkins /var/lib/jenkins/plugins && rm $HOME/$LAB_USER/plugins.txt
+
+RUN curl -L https://gist.githubusercontent.com/mprokopov/14c94e7fc55c6d6dea732e040e75d5a3/raw/4f8d18f866a9caadbd6d36c9faaa6781953b3576/jenkins.yaml -o /var/lib/jenkins/jenkins.yaml && chown jenkins:jenkins /var/lib/jenkins/jenkins.yaml
 
 COPY 500.rootfs-custom-jenkins-m/welcome $HOME/.welcome
