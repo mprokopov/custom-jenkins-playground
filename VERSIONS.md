@@ -1,5 +1,16 @@
 # custom-jenkins-playground — Version History
 
+## 1.3.3 — 2026-04-25
+
+### Fixed
+- `jenkins.yaml`: set a default admin password (`admin` / `admin`,
+  override with `JENKINS_ADMIN_PASSWORD` env var). With
+  `runSetupWizard=false` Jenkins doesn't generate
+  `initialAdminPassword` — and the JCasC user had no password set,
+  so students couldn't log in. Tutorials that say
+  `cat /var/lib/jenkins/secrets/initialAdminPassword` now need to be
+  updated to "use admin/admin" — see harbour-space-devops repo.
+
 ## 1.3.2 — 2026-04-25
 
 ### Fixed
