@@ -1,4 +1,4 @@
-IMAGE := ghcr.io/mprokopov/custom-jenkins-playground:1.3.0
+IMAGE := ghcr.io/mprokopov/custom-jenkins-playground:1.3.1
 
 build:
 	docker build --platform linux/amd64 . -t $(IMAGE)

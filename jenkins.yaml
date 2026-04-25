@@ -2,9 +2,6 @@ jenkins:
   authorizationStrategy:
     loggedInUsersCanDoAnything:
       allowAnonymousRead: false
-  crumbIssuer:
-    standard:
-      excludeClientIPFromCrumb: false
   disableRememberMe: false
   disabledAdministrativeMonitors:
   - "jenkins.diagnostics.ControllerExecutorsNoAgents"

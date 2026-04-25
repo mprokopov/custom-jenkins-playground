@@ -1,5 +1,15 @@
 # custom-jenkins-playground — Version History
 
+## 1.3.1 — 2026-04-25
+
+### Fixed
+- `jenkins.yaml`: removed `jenkins.crumbIssuer.standard.excludeClientIPFromCrumb`
+  — that attribute was dropped from `DefaultCrumbIssuer` in newer Jenkins LTS.
+  JCasC failed to apply, taking Jenkins down on startup. Defaults are fine.
+- `Dockerfile`: bumped Jenkins APT GPG key URL from `jenkins.io-2023.key` to
+  `jenkins.io-2026.key` (the 2023 key stopped serving the current signing
+  key; `apt-get update` failed with `NO_PUBKEY 7198F4B714ABFC68`).
+
 ## 1.3.0 — 2026-04 (CS411 Barcelona refresh)
 
 ### Fixed (the build was broken in 1.2.1)
