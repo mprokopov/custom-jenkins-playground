@@ -1,0 +1,45 @@
+#+title: Plan
+* Jenkins Plugins
+#+begin_src shell
+      cat>/home/laborant/plugins.txt<<EOF
+      configuration-as-code
+      commons-text-api
+      snakeyaml-api
+      json-api
+      prism-api
+      caffeine-api
+      workflow-aggregator
+      pipeline-stage-view
+      golang
+      git
+      github
+      job-dsl
+      permissive-script-security
+      eddsa-api
+      rebuild
+      EOF
+      curl -LO https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.13.2/jenkins-plugin-manager-2.13.2.jar
+
+      java -jar jenkins-plugin-manager-*.jar --war /usr/share/java/jenkins.war --plugin-download-directory /var/lib/jenkins/plugins/ --plugin-file /home/laborant/plugins.txt && chown -R jenkins:jenkins /var/lib/jenkins/plugins && rm /home/laborant/plugins.txt
+
+      curl -L https://gist.githubusercontent.com/mprokopov/14c94e7fc55c6d6dea732e040e75d5a3/raw/4f8d18f866a9caadbd6d36c9faaa6781953b3576/jenkins.yaml -o /var/lib/jenkins/jenkins.yaml && chown jenkins:jenkins /var/lib/jenkins/jenkins.yaml
+      mkdir -p /etc/systemd/system/jenkins.service.d
+      cat >/etc/systemd/system/jenkins.service.d/override.conf<<EOF
+      [Service]
+      Environment="JAVA_OPTS=-Djava.awt.headless=true  -Djenkins.install.runSetupWizard=false -Dpermissive-script-security.enabled=no_security -Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true"
+      EOF
+#+end_src
+* Docker
+#+begin_src shell
+      install -m 0755 -d /etc/apt/keyrings
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      chmod a+r /etc/apt/keyrings/docker.gpg
+
+      echo \
+      "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+      apt-get update && apt-get install --assume-yes docker-ce
+
+      systemctl start docker && chmod 777 /var/run/docker.sock
+#+end_src

@@ -7,6 +7,8 @@ ARG LAB_USER
 
 USER root
 
+COPY jenkins.yaml /var/lib/jenkins/jenkins.yaml
+
 RUN <<EOF
 set -eu
 
@@ -21,6 +23,8 @@ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins
 
 apt-get update
 apt-get install -y jenkins
+
+chown jenkins:jenkins /var/lib/jenkins/jenkins.yaml
 EOF
 
 RUN <<EOF
@@ -38,14 +42,24 @@ EOF
 
 COPY override.conf /etc/systemd/system/jenkins.service.d/override.conf
 
+# Install Jenkins plugins as root so we can write to /var/lib/jenkins/plugins.
+# (The previous order ran as $LAB_USER and also had a path typo.)
+COPY plugins.txt /tmp/plugins.txt
+
+ARG PLUGIN_MANAGER_VERSION=2.13.2
+RUN <<EOF
+set -eu
+curl -fsSL -o /tmp/jenkins-plugin-manager.jar \
+  https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/${PLUGIN_MANAGER_VERSION}/jenkins-plugin-manager-${PLUGIN_MANAGER_VERSION}.jar
+java -jar /tmp/jenkins-plugin-manager.jar \
+  --war /usr/share/java/jenkins.war \
+  --plugin-download-directory /var/lib/jenkins/plugins/ \
+  --plugin-file /tmp/plugins.txt
+chown -R jenkins:jenkins /var/lib/jenkins/plugins
+rm /tmp/jenkins-plugin-manager.jar /tmp/plugins.txt
+EOF
+
 USER $LAB_USER
 ENV HOME=/home/$LAB_USER
-
-COPY plugins.txt $HOME/plugins.txt
-
-RUN curl -LO https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.13.2/jenkins-plugin-manager-2.13.2.jar
-RUN java -jar jenkins-plugin-manager-*.jar --war /usr/share/java/jenkins.war --plugin-download-directory /var/lib/jenkins/plugins/ --plugin-file $HOME/$LAB_USER/plugins.txt && chown -R jenkins:jenkins /var/lib/jenkins/plugins && rm $HOME/$LAB_USER/plugins.txt
-
-RUN curl -L https://gist.githubusercontent.com/mprokopov/14c94e7fc55c6d6dea732e040e75d5a3/raw/4f8d18f866a9caadbd6d36c9faaa6781953b3576/jenkins.yaml -o /var/lib/jenkins/jenkins.yaml && chown jenkins:jenkins /var/lib/jenkins/jenkins.yaml
 
 COPY 500.rootfs-custom-jenkins-m/welcome $HOME/.welcome
