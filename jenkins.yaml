@@ -1,87 +1,34 @@
 jenkins:
+  systemMessage: "CS411 — Harbour Space DevOps lab"
+  numExecutors: 2
+  mode: NORMAL
+  scmCheckoutRetryCount: 0
+  quietPeriod: 5
+  slaveAgentPort: -1
   authorizationStrategy:
     loggedInUsersCanDoAnything:
       allowAnonymousRead: false
-  disableRememberMe: false
-  disabledAdministrativeMonitors:
-  - "jenkins.diagnostics.ControllerExecutorsNoAgents"
-  labelAtoms:
-  - name: "built-in"
-  markupFormatter: "plainText"
-  mode: NORMAL
-  myViewsTabBar: "standard"
-  nodeMonitors:
-  - "architecture"
-  - "clock"
-  - diskSpace:
-      freeSpaceThreshold: "1GiB"
-      freeSpaceWarningThreshold: "2GiB"
-  - "swapSpace"
-  - tmpSpace:
-      freeSpaceThreshold: "1GiB"
-      freeSpaceWarningThreshold: "2GiB"
-  - "responseTime"
-  numExecutors: 2
-  primaryView:
-    all:
-      name: "all"
-  projectNamingStrategy: "standard"
-  quietPeriod: 5
-  scmCheckoutRetryCount: 0
   securityRealm:
     local:
       allowsSignup: false
       enableCaptcha: false
       users:
-      - id: "admin"
-        name: "admin"
-        properties:
-        - "apiToken"
-        - "consoleUrlProvider"
-        - "myView"
-        - "timezone"
-        - "experimentalFlags"
-  slaveAgentPort: -1
-  updateCenter:
-    sites:
-    - id: "default"
-      url: "https://updates.jenkins.io/update-center.json"
-  views:
-  - all:
-      name: "all"
-  viewsTabBar: "standard"
-appearance:
-  prism:
-    theme: PRISM
+        - id: "admin"
+          name: "admin"
+          properties:
+            - "apiToken"
 security:
-  apiToken:
-    creationOfLegacyTokenEnabled: false
-    tokenGenerationOnCreationEnabled: false
-    usageStatisticsEnabled: true
   globalJobDslSecurityConfiguration:
     useScriptSecurity: false
   scriptApproval:
     forceSandbox: false
-    approvedScriptHashes:
-      - SHA512:26c35ecafc22d7532f906bdba15fdd8db5a34ff193adfa9940037c1f9fcec5fae53c0d4722e2eb32aaf2eb50a69e08923839232e953f5dc86cf6e712647a0bbe
   gitHostKeyVerificationConfiguration:
     sshHostKeyVerificationStrategy: "noHostKeyVerificationStrategy"
 unclassified:
-  buildDiscarders:
-    configuredBuildDiscarders:
-    - "jobBuildDiscarder"
-  fingerprints:
-    fingerprintCleanupDisabled: false
-    storage: "file"
   location:
     adminAddress: "address not configured yet <nobody@nowhere>"
-    url: "https://localhost:8080/"
-  pollSCM:
-    pollingThreadCount: 10
+    url: "http://localhost:8080/"
 tool:
-  mavenGlobalConfig:
-    globalSettingsProvider: "standard"
-    settingsProvider: "standard"
   go:
     installations:
       - name: "1.24.1"

@@ -1,5 +1,17 @@
 # custom-jenkins-playground — Version History
 
+## 1.3.2 — 2026-04-25
+
+### Fixed
+- `jenkins.yaml`: trimmed deprecated/dropped keys that JCasC rejects on
+  modern Jenkins LTS (`myViewsTabBar`, `viewsTabBar`, `markupFormatter`,
+  `primaryView`, `views`, `nodeMonitors`, `labelAtoms`,
+  `disabledAdministrativeMonitors`, `updateCenter`, `appearance.prism`,
+  `unclassified.buildDiscarders`, `unclassified.fingerprints`,
+  `unclassified.pollSCM`, `apiToken.creationOfLegacyTokenEnabled`,
+  `tool.mavenGlobalConfig`). Kept only the essential config: admin user,
+  auth strategy, script-security relaxations, Go toolchain, location.
+
 ## 1.3.1 — 2026-04-25
 
 ### Fixed
