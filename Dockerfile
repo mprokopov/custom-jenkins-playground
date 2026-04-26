@@ -37,7 +37,27 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githu
 apt-get update
 apt-get install -y \
   ansible \
-  gh
+  gh \
+  gnupg
+EOF
+
+# Bake in Vault + SOPS so the secrets-management tutorial doesn't need
+# a per-tutorial init task to fetch them at runtime.
+ARG VAULT_VERSION=2.0.0
+ARG SOPS_VERSION=3.12.2
+RUN <<EOF
+set -eu
+arch=amd64
+curl -fsSL -o /tmp/vault.zip "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_${arch}.zip"
+unzip -q /tmp/vault.zip -d /usr/local/bin/
+chmod +x /usr/local/bin/vault
+rm /tmp/vault.zip
+
+curl -fsSL -o /usr/local/bin/sops "https://github.com/getsops/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux.${arch}"
+chmod +x /usr/local/bin/sops
+
+vault version
+sops --version
 EOF
 
 COPY override.conf /etc/systemd/system/jenkins.service.d/override.conf

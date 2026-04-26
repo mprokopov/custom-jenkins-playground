@@ -1,5 +1,17 @@
 # custom-jenkins-playground — Version History
 
+## 1.3.5 — 2026-04-26
+
+### Added
+- Vault `2.0.0` binary at `/usr/local/bin/vault` (so the
+  hashicorp-vault-secrets tutorial doesn't 404 on `vault server -dev`).
+  The earlier strip-`setup_jenkins` sweep removed the per-tutorial
+  init task that fetched Vault 1.13.3 at runtime — baking it into the
+  image instead is the same fix as for seedRemote in 1.3.4.
+- SOPS `3.12.2` binary at `/usr/local/bin/sops`.
+- GnuPG (`gnupg` apt package) — required by SOPS for the
+  PGP-encrypted-file flow demoed in the tutorial.
+
 ## 1.3.4 — 2026-04-26
 
 ### Added
