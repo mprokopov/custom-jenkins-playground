@@ -1,5 +1,22 @@
 # custom-jenkins-playground — Version History
 
+## 1.3.4 — 2026-04-26
+
+### Added
+- `seedRemote-config.xml`: the Seed-Remote DSL job is now baked into
+  the image at `/var/lib/jenkins/jobs/seedRemote/config.xml`.
+  Previously tutorials fetched this from a gist via a per-tutorial
+  init task. Baking it removes the runtime network dependency and
+  the cold-start tax of running plugin reinstall + gist fetches that
+  duplicate what the image already contains.
+
+### Removed (in tutorials, not the image)
+- The `setup_jenkins` init task across 9 tutorials. With plugins,
+  JCasC, override.conf, and seedRemote all baked in, that block was
+  pure tech debt — and worse, its gist-fetched `jenkins.yaml` had
+  the deprecated `excludeClientIPFromCrumb` key that breaks Jenkins
+  on current LTS.
+
 ## 1.3.3 — 2026-04-25
 
 ### Fixed

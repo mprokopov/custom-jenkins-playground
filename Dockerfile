@@ -59,6 +59,12 @@ chown -R jenkins:jenkins /var/lib/jenkins/plugins
 rm /tmp/jenkins-plugin-manager.jar /tmp/plugins.txt
 EOF
 
+# Bake the Seed-Remote DSL job. Tutorials previously fetched this from a
+# gist at runtime via an init task; baking it here makes cold-start
+# deterministic and removes a network dependency.
+COPY seedRemote-config.xml /var/lib/jenkins/jobs/seedRemote/config.xml
+RUN chown -R jenkins:jenkins /var/lib/jenkins/jobs
+
 USER $LAB_USER
 ENV HOME=/home/$LAB_USER
 
