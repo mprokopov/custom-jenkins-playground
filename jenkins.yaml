@@ -32,9 +32,5 @@ unclassified:
 tool:
   go:
     installations:
-      - name: "1.24.1"
-        properties:
-          - installSource:
-              installers:
-                - golangInstaller:
-                    id: "1.24.1"
+      - name: "1.27.3"
+        home: "/usr/local/go"

@@ -79,6 +79,19 @@ chown -R jenkins:jenkins /var/lib/jenkins/plugins
 rm /tmp/jenkins-plugin-manager.jar /tmp/plugins.txt
 EOF
 
+# Pin and verify the toolchain at image build time. Student builds must not
+# depend on Jenkins update-centre metadata or first-run Go downloads.
+ARG GO_VERSION=1.27.3
+ARG GO_SHA256=65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40
+RUN <<EOF
+set -eu
+curl -fsSL --retry 3 -o /tmp/go.tar.gz "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+echo "${GO_SHA256}  /tmp/go.tar.gz" | sha256sum -c -
+tar -C /usr/local -xzf /tmp/go.tar.gz
+rm /tmp/go.tar.gz
+/usr/local/go/bin/go version
+EOF
+
 # Bake the Seed-Remote DSL job. Tutorials previously fetched this from a
 # gist at runtime via an init task; baking it here makes cold-start
 # deterministic and removes a network dependency.
