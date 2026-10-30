@@ -1,5 +1,15 @@
 # custom-jenkins-playground — Version History
 
+## 1.3.6 — 2026-10-30
+
+### Fixed
+- Bake Go 1.27.3 (latest stable on go.dev at verification) into
+  `/usr/local/go`, checking the official linux-amd64 SHA-256 at build time.
+- Jenkins tool `1.27.3` uses that local installation. Removed the 1.24.1
+  auto-installer, which failed on a fresh session when update metadata
+  could not be downloaded. Pipelines must select `1.27.3`.
+- Go remains a named Jenkins tool: pipeline tool selection adds it to PATH.
+
 ## 1.3.5 — 2026-04-26
 
 ### Added
